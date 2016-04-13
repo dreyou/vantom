@@ -1,3 +1,7 @@
+# Vagrant
+.vagrant
+# Skip distros
+distros/*
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
