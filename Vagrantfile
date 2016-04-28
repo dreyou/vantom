@@ -5,6 +5,8 @@
 # configures the configuration version (we support older styles for
 # backwards compatibility). Please don't change it unless you know what
 # you're doing.
+$s = 0
+$total = 3
 Vagrant.configure(2) do |config|
   # The most common configuration options are documented and commented below.
   # For a complete reference, please see the online documentation at
@@ -16,16 +18,15 @@ Vagrant.configure(2) do |config|
     ansible.playbook = "playbook.yml"
   end
   config.vm.box = "bento/centos-6.7"
+#  config.vm.box = "centos/atomic-host"
   config.vm.define :b0 do |b0|
     b0.vm.hostname = "b0"
   end
-  config.vm.define :s0 do |s0|
-    s0.vm.hostname = "s0"
-    s0.vm.network "forwarded_port", guest: 8080, host: 8081
-  end
-  config.vm.define :s1 do |s1|
-    s1.vm.hostname = "s1"
-    s1.vm.network "forwarded_port", guest: 8080, host: 8082
+  (1..3).each do |i|
+    config.vm.define "s#{i}" do |server|
+      server.vm.hostname = "s#{i}"
+      server.vm.network "forwarded_port", guest: 8080, host: "808#{i}"
+    end
   end
 
   # Disable automatic box update checking. If you disable this, then

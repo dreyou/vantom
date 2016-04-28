@@ -1,0 +1,13 @@
+---
+- hosts: ~(s\d)
+  remote_user: root
+  become: yes
+  tasks:
+  - name: ping
+    ping:
+  - name: pidof 
+    command: pidof java
+  - name: check sample application
+    shell: curl -G http://localhost:8080/sample/ | grep "Hello, World"
+  - name: check sampledeploy application
+    shell: curl -G http://localhost:8080/sampledeploy/ok/ | grep "OK"
