@@ -7,7 +7,9 @@
     ping:
   - name: pidof 
     command: pidof java
+  - name: tomcat server info
+    shell: curl -sS --basic -u tomcat:tomcat -G http://127.0.0.1:8080/manager/text/serverinfo | grep "OK"
   - name: check sample application
-    shell: curl -G http://localhost:8080/sample/ | grep "Hello, World"
+    shell: curl -sS -G http://localhost:8080/sample/ | grep "Hello, World"
   - name: check sampledeploy application
-    shell: curl -G http://localhost:8080/sampledeploy/ok/ | grep "OK"
+    shell: curl -sS -G http://localhost:8080/sampledeploy/ok/ | grep "OK"

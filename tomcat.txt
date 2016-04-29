@@ -1,0 +1,39 @@
+Manager interface
+
+http://localhost:8080/manager/text
+
+/deploy?config={config-url} - Install and start a new web application, based on the contents of the context configuration file found at the specified URL. The docBase attribute of the context configuration file is used to locate the actual WAR or directory containing the application.
+
+/deploy?config={config-url}&war={war-url}/ - Install and start a new web application, based on the contents of the context configuration file found at {config-url}, overriding the docBase attribute with the contents of the web application archive found at {war-url}.
+
+/deploy?path=/xxx&war={war-url} - Install and start a new web application attached to context path /xxx, based on the contents of the web application archive found at the specified URL.
+
+/list - List the context paths of all currently installed web applications for this virtual host. Each context will be listed with the following format path:status:sessions. Where path is the context path. Status is either running or stopped. Sessions is the number of active Sessions.
+
+/reload?path=/xxx - Reload the Java classes and resources for the application at the specified path.
+
+/resources?type=xxxx - Enumerate the available global JNDI resources, optionally limited to those of the specified type (fully qualified Java class name), if available.
+
+/serverinfo - Display system OS and JVM properties.
+
+/sessions - Deprecated. Use expire.
+
+/expire?path=/xxx - List session idle time information about the web application attached to context path /xxx for this virtual host.
+
+/expire?path=/xxx&idle=mm - Expire sessions for the context path /xxx which were idle for at least mm minutes.
+
+/sslConnectorCiphers - Display diagnostic info on SSL/TLS ciphers that are currently configured for each connector.
+
+/start?path=/xxx - Start the web application attached to context path /xxx for this virtual host.
+
+/stop?path=/xxx - Stop the web application attached to context path /xxx for this virtual host.
+
+/threaddump - Write a JVM thread dump.
+
+/undeploy?path=/xxx - Shutdown and remove the web application attached to context path /xxx for this virtual host, and remove the underlying WAR file or document base directory. (NOTE - This is only allowed if the WAR file or document base is stored in the appBase directory of this host, typically as a result of being placed there via the /deploy command.
+
+/vminfo - Write some VM info.
+
+/save - Save the current server configuration to server.xml
+
+/save?path=/xxx - Save the context configuration for the web application deployed with path /xxx to an appropriately named context.xml file in the xmlBase for the associated Host.
