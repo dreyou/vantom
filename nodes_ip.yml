@@ -1,0 +1,7 @@
+---
+- hosts: ~(s\d+)
+  remote_user: root
+  become: yes
+  tasks:
+  - name: read ip
+    shell: ip addr | grep 'inet ' | grep -v 127 | sed 's/^.* \([0-9\.]\+\)\/.*$/%%\1%%/gi'

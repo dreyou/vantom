@@ -1,0 +1,34 @@
+---
+- hosts: ~(b\d+)
+  vars:
+    dist: "./distros"
+    files: "./files"
+  remote_user: root
+  become: yes
+  tasks:
+  - name: ping
+    ping:
+  - name: packages 
+    yum: name=sysstat
+  - name: packages 
+    yum: name=vim
+  - name: packages 
+    yum: name=httpd
+  - name: packages 
+    yum: name=mod_ssl
+  - name: packages 
+    yum: name=libselinux-python
+  - name: copy ssl conf
+    copy: src=files/sample.conf dest=/etc/httpd/conf.d
+  - name: nodes dir
+    file: path=/etc/httpd/conf.d/nodes.d state=directory
+  - name: copy nodes list
+    copy: src=files/nodes.list dest=/etc/httpd/conf.d/nodes.d/nodes.list
+  - name: html ok dir
+    file: path=/var/www/html/ok state=directory
+  - name: copy ok.html 
+    copy: src=files/ok.html dest=/var/www/html/ok/index.html
+  - name: copy ok.html 
+    copy: src=files/ok.html dest=/var/www/html/ok.html
+  - name: start httpd
+    service: enabled=yes name=httpd state=started

@@ -1,0 +1,11 @@
+---
+- hosts: ~(b\d+)
+  remote_user: root
+  become: yes
+  tasks:
+  - name: ping
+    ping:
+  - name: check ok
+    shell: curl -sS -G http://localhost:80/ok/ | grep "OK"
+  - name: check ok
+    shell: curl -sS -k -G https://localhost:443/ok/ | grep "OK"
