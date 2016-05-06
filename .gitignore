@@ -3,6 +3,8 @@
 # Skip distros
 distros/*
 files/nodes.list
+files/nodes.http_list
+files/nodes.ajp_list
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

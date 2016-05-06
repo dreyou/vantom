@@ -22,8 +22,10 @@
     copy: src=files/sample.conf dest=/etc/httpd/conf.d
   - name: nodes dir
     file: path=/etc/httpd/conf.d/nodes.d state=directory
-  - name: copy nodes list
-    copy: src=files/nodes.list dest=/etc/httpd/conf.d/nodes.d/nodes.list
+  - name: copy http nodes list
+    copy: src=files/nodes.http_list dest=/etc/httpd/conf.d/nodes.d/nodes.http_list
+  - name: copy ajp nodes list
+    copy: src=files/nodes.ajp_list dest=/etc/httpd/conf.d/nodes.d/nodes.ajp_list
   - name: html ok dir
     file: path=/var/www/html/ok state=directory
   - name: copy ok.html 

@@ -25,6 +25,8 @@
     copy: src=files/context.xml dest=/opt/tomcat/webapps/host-manager/META-INF/context.xml
   - name: copy tomcat context
     copy: src=files/context.xml dest=/opt/tomcat/webapps/manager/META-INF/context.xml
+  - name: copy tomcat server config
+    copy: src=files/server.xml dest=/opt/tomcat/conf/server.xml
   - name: copy tomcat sample
     copy: src={{ dist }}/sample.war dest=/opt/tomcat/webapps/sample.war
   - name: copy tomcat sampledeploy
