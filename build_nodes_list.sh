@@ -2,7 +2,7 @@
 IPS=`ansible-playbook -v nodes_ip.yml |grep %% |sed 's/^.*%%\([0-9\.]\+\)%%.*$/\1/g'`
 HNODES="files/nodes.http_list"
 ANODES="files/nodes.ajp_list"
-HTML=html/test.html
+HTML=html/index.html
 JHT="//JOLOKIA_HOSTS_TEMPLATES\n//###"
 rm -f $NODES
 IPSL=0
