@@ -1,5 +1,7 @@
 <html>
 <head>
+  <link rel="stylesheet" href="css/bootstrap.min.css"/>
+  <link rel="stylesheet" href="css/bootstrap-theme.min.css"/>
   <script src="js/jquery.min.js"></script>
   <script src="js/json2.js"></script>
   <script src="js/jolokia-min.js"></script>
@@ -8,11 +10,11 @@
 var j4p = new Jolokia("http://localhost:8081/jolokia");
 function show(){
 var value = j4p.getAttribute("java.lang:type=Memory","HeapMemoryUsage","used");
-document.write("HeapMemoryUsage: "+value);
+    $('#heap').text("HeapMemoryUsage: "+value)
 }
 </script>
 </head>
 <body onLoad="show();">
-
+<p id="heap"></p>
 </body>
 </html>

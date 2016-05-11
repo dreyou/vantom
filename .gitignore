@@ -7,8 +7,9 @@ distros/*
 files/nodes.list
 files/nodes.http_list
 files/nodes.ajp_list
-# Common js libraries
+# Common js/css libraries
 html/js/*
+html/css/*
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
