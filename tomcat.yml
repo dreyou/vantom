@@ -31,6 +31,8 @@
     copy: src={{ dist }}/sample.war dest=/opt/tomcat/webapps/sample.war
   - name: copy tomcat sampledeploy
     copy: src={{ dist }}/sampledeploy.war dest=/opt/tomcat/webapps/sampledeploy.war
+  - name: copy tomcat jolokia
+    copy: src={{ dist }}/jolokia.war dest=/opt/tomcat/webapps/jolokia.war
   - name: copy tomcat add service
     command: chkconfig --add tomcat9
   - name: start tomcat

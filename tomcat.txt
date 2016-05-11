@@ -1,3 +1,10 @@
+Jolokia interface
+
+http://localhost:8081/jolokia/read/java.lang:type=Memory/HeapMemoryUsage/used - read HeapMemory Usage
+
+http://localhost:8080/jolokia/read/java.lang:type=* - read all parameters
+
+
 Manager interface
 
 http://localhost:8080/manager/text

@@ -13,3 +13,5 @@
     shell: curl -sS -G http://localhost:8080/sample/ | grep "Hello, World"
   - name: check sampledeploy application
     shell: curl -sS -G http://localhost:8080/sampledeploy/ok/ | grep "OK"
+  - name: check jolokia application
+    shell: curl -sS -G http://localhost:8080/jolokia/version | grep '"status":200'

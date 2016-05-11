@@ -1,5 +1,7 @@
 # Vagrant
 .vagrant
+# Skip retry
+*.retry
 # Skip distros
 distros/*
 files/nodes.list
