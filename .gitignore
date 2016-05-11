@@ -1,6 +1,6 @@
 # Vagrant
 .vagrant
-# Skip retry
+# Skip ansible retry
 *.retry
 # Skip distros
 distros/*
