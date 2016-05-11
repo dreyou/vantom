@@ -7,10 +7,24 @@
   <script src="js/jolokia-min.js"></script>
   <script src="js/jolokia-simple-min.js"></script>
 <script>
-var j4p = new Jolokia("http://localhost:8081/jolokia");
+var j4p = [];
+//JOLOKIA_HOSTS_TEMPLATES
+//###
+j4p[1] = new Jolokia("http://localhost:8081/jolokia");
+j4p[2] = new Jolokia("http://localhost:8082/jolokia");
+j4p[3] = new Jolokia("http://localhost:8083/jolokia");
+//###
 function show(){
-var value = j4p.getAttribute("java.lang:type=Memory","HeapMemoryUsage","used");
-    $('#heap').text("HeapMemoryUsage: "+value)
+    var text = "";
+
+    for(var i=1;i<j4p.length;i++){
+
+       var value = j4p[i].getAttribute("java.lang:type=Memory","HeapMemoryUsage","used");
+   
+       text = text + "HeapMemoryUsage: "+value+"<br/>";
+  }
+
+  $('#heap').html(text)
 }
 </script>
 </head>
