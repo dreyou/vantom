@@ -1,0 +1,18 @@
+<html>
+<head>
+  <script src="js/jquery.min.js"></script>
+  <script src="js/json2.js"></script>
+  <script src="js/jolokia-min.js"></script>
+  <script src="js/jolokia-simple-min.js"></script>
+<script>
+var j4p = new Jolokia("http://localhost:8081/jolokia");
+function show(){
+var value = j4p.getAttribute("java.lang:type=Memory","HeapMemoryUsage","used");
+document.write("HeapMemoryUsage: "+value);
+}
+</script>
+</head>
+<body onLoad="show();">
+
+</body>
+</html>
