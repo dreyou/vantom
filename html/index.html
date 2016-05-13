@@ -36,6 +36,7 @@ function initHostArray(){
   var jmx = [];
   jmx["HeapMemoryUsage"] = ({data: [], divider: 1000000, type: "Memory", name: "HeapMemoryUsage", subName: "used"});
   jmx["SystemLoadAverage"] = ({data: [], divider: 1, type: "OperatingSystem", name: "SystemLoadAverage", subName: ""});
+  jmx["ThreadCount"] = ({data: [], divider: 1, type: "Threading", name: "ThreadCount", subName: ""});
   return jmx;
 }
 function init(){
@@ -67,7 +68,7 @@ function updateData(){
       }
       currentData.addRow(addRowArr);
     }
-    charts[key].draw(currentData,({hAxis: { maxValue: MAX_POINTS+RIGHT_SHIFT, minValue: 0 }}));
+    charts[key].draw(currentData,({hAxis: { maxValue: MAX_POINTS+RIGHT_SHIFT, minValue: 0 }, vAxis: { viewWindow: {min: 0 } },}));
   }
 }
 </script>
@@ -76,6 +77,9 @@ function updateData(){
 <div>
 <div id="HeapMemoryUsage" style="float:left;width:50%;height:400;"></div>
 <div id="SystemLoadAverage" style="float:left;width:50%;height:400;"></div>
+</div>
+<div>
+<div id="ThreadCount" style="float:left;width:50%;height:400;"></div>
 </div>
 </body>
 </html>
