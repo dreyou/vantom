@@ -6,29 +6,73 @@
   <script src="js/json2.js"></script>
   <script src="js/jolokia-min.js"></script>
   <script src="js/jolokia-simple-min.js"></script>
+  <!-- Google Charts -->
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script>
+//Constansts here
+var MAX_POINTS = 512;
+var INTERVAL = 2;
+//Globals here
+var charts = [];
+var update;
 var j4p = [];
+var hostsData = [];
+//Inits here
+google.charts.load('current', {packages: ['corechart']});
+ google.charts.setOnLoadCallback(function(){
+   for( key in initHostArray()){
+     charts[key] =  new google.visualization.LineChart(document.getElementById(key));
+   }
+   updateData();
+ });
 //JOLOKIA_HOSTS_TEMPLATES
 //###
 j4p[1] = new Jolokia("http://localhost:8081/jolokia");
 j4p[2] = new Jolokia("http://localhost:8082/jolokia");
 j4p[3] = new Jolokia("http://localhost:8083/jolokia");
 //###
-function show(){
-    var text = "";
-
-    for(var i=1;i<j4p.length;i++){
-
-       var value = j4p[i].getAttribute("java.lang:type=Memory","HeapMemoryUsage","used");
-   
-       text = text + "HeapMemoryUsage: "+value+"<br/>";
+function initHostArray(){
+  var jmx = [];
+  jmx["HeapMemoryUsage"] = ({data: [], divider: 100000, type: "Memory", name: "HeapMemoryUsage", subName: "used"});
+  jmx["SystemLoadAverage"] = ({data: [], divider: 1, type: "OperatingSystem", name: "SystemLoadAverage", subName: ""});
+  return jmx;
+}
+function init(){
+  for(var i=1;i<j4p.length;i++){
+      hostsData[i]=initHostArray();
   }
-
-  $('#heap').html(text)
+  update = setInterval(function(){updateData();},1000*INTERVAL);
+}
+function updateData(){
+  for(var i=1;i<j4p.length;i++){
+    for(var key in hostsData[i]){
+      var value = j4p[i].getAttribute("java.lang:type="+hostsData[i][key].type,hostsData[i][key].name,hostsData[i][key].subName);
+      if(hostsData[i][key].data.length >= MAX_POINTS){
+        hostsData[i][key].data.shift();
+      }
+      hostsData[i][key].data.push(Number(value)); 
+    }
+  }
+  for( key in initHostArray()){
+    var currentData = new google.visualization.DataTable();
+    for(var a=0;a<j4p.length;a++){
+      currentData.addColumn("number")
+    }
+    for(var j=0;j<hostsData[1][key].data.length;j++){
+      var addRowArr = [];
+      addRowArr.push(Number(j)*INTERVAL);
+      for(var i=1;i<j4p.length;i++){
+        addRowArr.push(hostsData[i][key].data[j]);
+      }
+      currentData.addRow(addRowArr);
+    }
+    charts[key].draw(currentData,({hAxis: { maxValue: MAX_POINTS*INTERVAL+10, minValue: 0 }}));
+  }
 }
 </script>
 </head>
-<body onLoad="show();">
-<p id="heap"></p>
+<body onLoad="init();">
+<div id="HeapMemoryUsage"></div>
+<div id="SystemLoadAverage"></div>
 </body>
 </html>
