@@ -10,8 +10,9 @@
   <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script>
 //Constansts here
-var MAX_POINTS = 512;
-var INTERVAL = 2;
+var MAX_POINTS = 128;
+var INTERVAL = 1;
+var RIGHT_SHIFT = 4;
 //Globals here
 var charts = [];
 var update;
@@ -33,7 +34,7 @@ j4p[3] = new Jolokia("http://localhost:8083/jolokia");
 //###
 function initHostArray(){
   var jmx = [];
-  jmx["HeapMemoryUsage"] = ({data: [], divider: 100000, type: "Memory", name: "HeapMemoryUsage", subName: "used"});
+  jmx["HeapMemoryUsage"] = ({data: [], divider: 1000000, type: "Memory", name: "HeapMemoryUsage", subName: "used"});
   jmx["SystemLoadAverage"] = ({data: [], divider: 1, type: "OperatingSystem", name: "SystemLoadAverage", subName: ""});
   return jmx;
 }
@@ -60,19 +61,21 @@ function updateData(){
     }
     for(var j=0;j<hostsData[1][key].data.length;j++){
       var addRowArr = [];
-      addRowArr.push(Number(j)*INTERVAL);
+      addRowArr.push(Number(j));
       for(var i=1;i<j4p.length;i++){
         addRowArr.push(hostsData[i][key].data[j]);
       }
       currentData.addRow(addRowArr);
     }
-    charts[key].draw(currentData,({hAxis: { maxValue: MAX_POINTS*INTERVAL+10, minValue: 0 }}));
+    charts[key].draw(currentData,({hAxis: { maxValue: MAX_POINTS+RIGHT_SHIFT, minValue: 0 }}));
   }
 }
 </script>
 </head>
 <body onLoad="init();">
-<div id="HeapMemoryUsage"></div>
-<div id="SystemLoadAverage"></div>
+<div>
+<div id="HeapMemoryUsage" style="float:left;width:50%;height:400;"></div>
+<div id="SystemLoadAverage" style="float:left;width:50%;height:400;"></div>
+</div>
 </body>
 </html>
