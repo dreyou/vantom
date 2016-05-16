@@ -18,6 +18,7 @@ var charts = [];
 var update;
 var j4p = [];
 var hostsData = [];
+var skip = false;
 //Inits here
 google.charts.load('current', {packages: ['corechart']});
  google.charts.setOnLoadCallback(function(){
@@ -35,6 +36,7 @@ j4p[3] = new Jolokia("http://localhost:8083/jolokia");
 function initHostArray(){
   var jmx = [];
   jmx["HeapMemoryUsage"] = ({data: [], divider: 1000000, type: "Memory", name: "HeapMemoryUsage", subName: "used"});
+  jmx["NonHeapMemoryUsage"] = ({data: [], divider: 1000000, type: "Memory", name: "NonHeapMemoryUsage", subName: "used"});
   jmx["SystemLoadAverage"] = ({data: [], divider: 1, type: "OperatingSystem", name: "SystemLoadAverage", subName: ""});
   jmx["ThreadCount"] = ({data: [], divider: 1, type: "Threading", name: "ThreadCount", subName: ""});
   return jmx;
@@ -46,6 +48,7 @@ function init(){
   update = setInterval(function(){updateData();},1000*INTERVAL);
 }
 function updateData(){
+  if(skip)return;
   for(var i=1;i<j4p.length;i++){
     for(var key in hostsData[i]){
       var value = j4p[i].getAttribute("java.lang:type="+hostsData[i][key].type,hostsData[i][key].name,hostsData[i][key].subName);
@@ -58,7 +61,11 @@ function updateData(){
   for( key in initHostArray()){
     var currentData = new google.visualization.DataTable();
     for(var a=0;a<j4p.length;a++){
-      currentData.addColumn("number")
+      if(a==0){
+        currentData.addColumn("number");
+      }else{
+        currentData.addColumn("number","s"+a);
+      }
     }
     for(var j=0;j<hostsData[1][key].data.length;j++){
       var addRowArr = [];
@@ -68,18 +75,27 @@ function updateData(){
       }
       currentData.addRow(addRowArr);
     }
-    charts[key].draw(currentData,({hAxis: { maxValue: MAX_POINTS+RIGHT_SHIFT, minValue: 0 }, vAxis: { viewWindow: {min: 0 } },}));
+    charts[key].draw(currentData,({'title': key, hAxis: { maxValue: MAX_POINTS+RIGHT_SHIFT, minValue: 0 }, vAxis: { viewWindow: {min: 0 } },}));
   }
+}
+function stopClicked(){
+  skip = $('#stop').is(":checked"); 
 }
 </script>
 </head>
 <body onLoad="init();">
+<div align="center">
+<form>
+Stop <input id="stop" type="checkbox" onClick="stopClicked();"></input>
+</form>
+</div>
 <div>
 <div id="HeapMemoryUsage" style="float:left;width:50%;height:400;"></div>
-<div id="SystemLoadAverage" style="float:left;width:50%;height:400;"></div>
+<div id="NonHeapMemoryUsage" style="float:left;width:50%;height:400;"></div>
 </div>
 <div>
 <div id="ThreadCount" style="float:left;width:50%;height:400;"></div>
+<div id="SystemLoadAverage" style="float:left;width:50%;height:400;"></div>
 </div>
 </body>
 </html>
