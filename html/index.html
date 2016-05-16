@@ -11,7 +11,7 @@
 <script>
 //Constansts here
 var MAX_POINTS = 128;
-var INTERVAL = 1;
+var INTERVAL = 2;
 var RIGHT_SHIFT = 4;
 //Globals here
 var charts = [];
@@ -46,7 +46,7 @@ function init(){
   for(var i=1;i<j4p.length;i++){
       hostsData[i]=initHostArray();
   }
-  update = setInterval(function(){updateData();},1000*INTERVAL);
+  runUpdate();
 }
 function updateData(){
   if(skip)return;
@@ -79,15 +79,40 @@ function updateData(){
     charts[key].draw(currentData,({'title': key, hAxis: { maxValue: MAX_POINTS+RIGHT_SHIFT, minValue: 0 }, vAxis: { viewWindow: {min: 0 } },}));
   }
 }
+function stopUpdate(){
+  clearInterval(update);
+}
+function runUpdate(){
+  console.log(INTERVAL);
+  update = setInterval(function(){updateData();},Number(1000)*Number(INTERVAL));
+}
 function stopClicked(){
   skip = $('#stop').is(":checked"); 
+  if(skip){
+    stopUpdate();
+  }else{
+    runUpdate();
+  }
+}
+function updateInterval(){
+  INTERVAL = Number($('#interval').val());
+  if(!skip){
+    stopUpdate();
+    runUpdate();
+  }
 }
 </script>
 </head>
 <body onLoad="init();">
 <div align="center">
 <form>
-Stop <input id="stop" type="checkbox" onClick="stopClicked();"></input>
+Stop <input id="stop" type="checkbox" onclick="stopClicked()"></input>
+Interval <select id="interval" name="interval" onchange="updateInterval()">
+  <option value="1">1 sec</option>
+  <option value="2" selected="true">2 sec</option>
+  <option value="4">4 sec</option>
+  <option value="8">8 sec</option>
+</select>
 </form>
 </div>
 <div>
