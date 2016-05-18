@@ -1,5 +1,7 @@
 # Vagrant
 .vagrant
+# Skip vim swaps
+*.swp
 # Skip ansible retry
 *.retry
 # Skip distros

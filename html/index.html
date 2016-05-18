@@ -15,10 +15,10 @@ var INTERVAL = 2;
 var RIGHT_SHIFT = 4;
 //Globals here
 var charts = [];
-var update;
 var j4p = [];
 var hostsData = [];
 var skip = false;
+var update = false;
 //Inits here
 google.charts.load('current', {packages: ['corechart']});
  google.charts.setOnLoadCallback(function(){
@@ -27,6 +27,7 @@ google.charts.load('current', {packages: ['corechart']});
    }
    updateData();
  });
+
 //JOLOKIA_HOSTS_TEMPLATES
 //###
 j4p[1] = new Jolokia("http://localhost:8081/jolokia");
@@ -34,31 +35,59 @@ j4p[2] = new Jolokia("http://localhost:8082/jolokia");
 j4p[3] = new Jolokia("http://localhost:8083/jolokia");
 j4p[4] = new Jolokia("http://localhost:8084/jolokia");
 //###
+
 function initHostArray(){
   var jmx = [];
   jmx["HeapMemoryUsage"] = ({data: [], divider: 1000000, type: "Memory", name: "HeapMemoryUsage", subName: "used"});
   jmx["NonHeapMemoryUsage"] = ({data: [], divider: 1000000, type: "Memory", name: "NonHeapMemoryUsage", subName: "used"});
-  jmx["SystemLoadAverage"] = ({data: [], divider: 1, type: "OperatingSystem", name: "SystemLoadAverage", subName: ""});
-  jmx["ThreadCount"] = ({data: [], divider: 1, type: "Threading", name: "ThreadCount", subName: ""});
+  jmx["SystemLoadAverage"] = ({data: [], divider: 1, type: "OperatingSystem", name: "SystemLoadAverage", subName: null});
+  jmx["ThreadCount"] = ({data: [], divider: 1, type: "Threading", name: "ThreadCount", subName: null});
   return jmx;
 }
+
 function init(){
   for(var i=1;i<j4p.length;i++){
       hostsData[i]=initHostArray();
   }
   runUpdate();
 }
-function updateData(){
+
+function readHostsData(){
   if(skip)return;
+  var values = [];
+  for(var i=1;i<j4p.length;i++){
+    values[i] = null;
+    values[i] = j4p[i].getAttribute("java.lang:type=*");
+  }
+  return values;
+}
+
+function updateHostsData(values=[]){
   for(var i=1;i<j4p.length;i++){
     for(var key in hostsData[i]){
-      var value = j4p[i].getAttribute("java.lang:type="+hostsData[i][key].type,hostsData[i][key].name,hostsData[i][key].subName);
+      var value = 0;
+      if(values[i] != null){
+         if(hostsData[i][key].subName != null){
+           value = values[i]["java.lang:type="+hostsData[i][key].type][hostsData[i][key].name][hostsData[i][key].subName];
+         }else{
+           value = values[i]["java.lang:type="+hostsData[i][key].type][hostsData[i][key].name];
+         }
+      }
       if(hostsData[i][key].data.length >= MAX_POINTS){
         hostsData[i][key].data.shift();
       }
-      hostsData[i][key].data.push(Number(value)); 
+      hostsData[i][key].data.push(Number(value));
     }
   }
+}
+
+function updateData(){
+  if(skip)return;
+  updateHostsData(readHostsData());
+  drawData();
+}
+
+function drawData(){
   for( key in initHostArray()){
     var currentData = new google.visualization.DataTable();
     for(var a=0;a<j4p.length;a++){
@@ -79,13 +108,18 @@ function updateData(){
     charts[key].draw(currentData,({'title': key, hAxis: { maxValue: MAX_POINTS+RIGHT_SHIFT, minValue: 0 }, vAxis: { viewWindow: {min: 0 } },}));
   }
 }
+
 function stopUpdate(){
   clearInterval(update);
+  update = false;
 }
+
 function runUpdate(){
-  console.log(INTERVAL);
-  update = setInterval(function(){updateData();},Number(1000)*Number(INTERVAL));
+  if(!update){
+    update = setInterval(function(){updateData();},Number(1000)*Number(INTERVAL));
+  }
 }
+
 function stopClicked(){
   skip = $('#stop').is(":checked"); 
   if(skip){
@@ -94,6 +128,7 @@ function stopClicked(){
     runUpdate();
   }
 }
+
 function updateInterval(){
   INTERVAL = Number($('#interval').val());
   if(!skip){
@@ -101,6 +136,7 @@ function updateInterval(){
     runUpdate();
   }
 }
+
 </script>
 </head>
 <body onLoad="init();">
