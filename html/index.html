@@ -6,6 +6,8 @@
   <script src="js/json2.js"></script>
   <script src="js/jolokia-min.js"></script>
   <script src="js/jolokia-simple-min.js"></script>
+  <!-- Local Configs -->
+  <script src="js/hosts.js"></script>
   <!-- Google Charts -->
   <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script>
@@ -13,12 +15,13 @@
 var MAX_POINTS = 128;
 var INTERVAL = 2;
 var RIGHT_SHIFT = 4;
+
 //Globals here
 var charts = [];
-var j4p = [];
 var hostsData = [];
 var skip = false;
 var update = false;
+
 //Inits here
 google.charts.load('current', {packages: ['corechart']});
  google.charts.setOnLoadCallback(function(){
@@ -27,14 +30,6 @@ google.charts.load('current', {packages: ['corechart']});
    }
    updateData();
  });
-
-//JOLOKIA_HOSTS_TEMPLATES
-//###
-j4p[1] = new Jolokia("http://localhost:8081/jolokia");
-j4p[2] = new Jolokia("http://localhost:8082/jolokia");
-j4p[3] = new Jolokia("http://localhost:8083/jolokia");
-j4p[4] = new Jolokia("http://localhost:8084/jolokia");
-//###
 
 function initHostArray(){
   var jmx = [];
