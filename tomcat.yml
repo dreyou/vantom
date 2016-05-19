@@ -14,9 +14,9 @@
   - name: packages 
     yum: name=libselinux-python state=latest
   - name: copy tomcat tgz
-    unarchive: copy=yes src={{ dist }}/apache-tomcat-9.0.0.M4.tar.gz dest=/opt
+    unarchive: copy=yes src={{ dist }}/apache-tomcat-9.0.0.M6.tar.gz dest=/opt
   - name: copy tomcat link
-    file: path=/opt/tomcat state=link src=/opt/apache-tomcat-9.0.0.M4
+    file: path=/opt/tomcat state=link src=/opt/apache-tomcat-9.0.0.M6
   - name: copy tomcat init
     copy: src=files/tomcat9 dest=/etc/init.d/tomcat9 mode=755
   - name: copy tomcat users
