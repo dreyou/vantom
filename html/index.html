@@ -102,7 +102,7 @@ function updateHostsData(values=[]){
            value = values[i]["java.lang:type="+hostsData[i][key].type][hostsData[i][key].name];
          }
       }
-      if(hostsData[i][key].data.length >= MAX_POINTS){
+      while(hostsData[i][key].data.length >= MAX_POINTS){
         hostsData[i][key].data.shift();
       }
       hostsData[i][key].data.push(Number(value));
@@ -172,6 +172,15 @@ function updateInterval(){
   }
 }
 
+function updateIntervals(){
+  MAX_POINTS = Number($('#intervals').val());
+  console.log(MAX_POINTS);
+  if(!skip){
+    stopUpdate();
+    runUpdate();
+  }
+}
+
 </script>
 </head>
 <body onLoad="init();">
@@ -183,6 +192,13 @@ Interval <select id="interval" name="interval" onchange="updateInterval()">
   <option value="2" selected="true">2 sec</option>
   <option value="4">4 sec</option>
   <option value="8">8 sec</option>
+</select>
+Intervals <select id="intervals" name="intervals" onchange="updateIntervals()">
+  <option value="64">64</option>
+  <option value="128" selected="true">128</option>
+  <option value="256">256</option>
+  <option value="512">512</option>
+  <option value="1024">1024</option>
 </select>
 </form>
 </div>
