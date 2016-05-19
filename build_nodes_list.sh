@@ -5,7 +5,8 @@ ANODES="files/nodes.ajp_list"
 HTML=html/index.html
 HTML_HOSTS=html/js/hosts.js
 JHT="//##Auto generated host list\nvar j4p = [];\n//###"
-rm -f $NODES
+rm -f $HNODES
+rm -f $ANODES
 IPSL=0
 for IP in $IPS; do
   if [[ $IP =~ ([0-9]+)$ ]];then

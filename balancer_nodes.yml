@@ -9,6 +9,6 @@
   - name: ping
     ping:
   - name: copy nodes list
-    copy: src=files/nodes.list dest=/etc/httpd/conf.d/nodes.d/nodes.list
+    copy: src=files/nodes.ajp_list dest=/etc/httpd/conf.d/nodes.d/nodes.ajp_list
   - name: start httpd
     service: enabled=yes name=httpd state=reloaded
