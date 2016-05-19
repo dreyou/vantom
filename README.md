@@ -7,7 +7,7 @@ Vagrant setup to create Tomcats/httpd balancer playground
 
 3. Run shell command to up and check servers:
 
-  ./prep.sh&&vagrant up&&ansible-playbook tomcat.yml&&./build_nodes_list.sh&&ansible-playbook balancer.yml&&ansible-playbook tomcat_check.yml&&ansible-playbook balancer_check.jmx&&ansible-playbook balancer_nodes.yml
+  ./prep.sh&&vagrant up&&ansible-playbook tomcat.yml&&./build_nodes_list.sh&&ansible-playbook balancer.yml&&ansible-playbook tomcat_check.yml&&ansible-playbook balancer_check.yml&&ansible-playbook balancer_nodes.yml
 
 4. Open and run jmeter-plan.yml in Apache JMeter
 
