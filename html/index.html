@@ -15,12 +15,16 @@
 var MAX_POINTS = 128;
 var INTERVAL = 2;
 var RIGHT_SHIFT = 4;
+var WTIMEOUT = 2000;
+var WWAIT = 14000;
 
 //Globals here
 var charts = [];
 var hostsData = [];
+var hostsChecks = [];
 var skip = false;
 var update = false;
+var startTime = new Date().getTime();
 
 //Inits here
 google.charts.load('current', {packages: ['corechart']});
@@ -28,7 +32,7 @@ google.charts.load('current', {packages: ['corechart']});
    for( key in initHostArray()){
      charts[key] =  new google.visualization.LineChart(document.getElementById(key));
    }
-   updateData();
+   drawData();
  });
 
 function initHostArray(){
@@ -40,10 +44,29 @@ function initHostArray(){
   return jmx;
 }
 
+function checkChecksTime(){
+  var currentTime = new Date().getTime();
+  for(var i=1;i<j4p.length;i++){
+      if(!hostsChecks[i].check){
+         if(currentTime - hostsChecks[i].time > WWAIT){
+           hostsChecks[i].check = true;
+           hostsChecks[i].time = 0;
+         }
+      }
+  }
+}
+
+function resetHostsChecks(){
+  for(var i=1;i<j4p.length;i++){
+      hostsChecks[i]=({check: true,time: 0});
+  }
+}
+
 function init(){
   for(var i=1;i<j4p.length;i++){
       hostsData[i]=initHostArray();
   }
+  resetHostsChecks();
   runUpdate();
 }
 
@@ -52,7 +75,18 @@ function readHostsData(){
   var values = [];
   for(var i=1;i<j4p.length;i++){
     values[i] = null;
-    values[i] = j4p[i].getAttribute("java.lang:type=*");
+    checkChecksTime();
+    if(hostsChecks[i].check){
+      hostsChecks[i].check = false;
+      hostsChecks[i].time = new Date().getTime();
+      values[i] = j4p[i].getAttribute("java.lang:type=*");
+      var stopTime = new Date().getTime();
+      if(stopTime - hostsChecks[i].time > WTIMEOUT){
+        return null;
+      }
+      hostsChecks[i].check = true;
+      hostsChecks[i].time = 0;
+    }
   }
   return values;
 }
@@ -76,8 +110,14 @@ function updateHostsData(values=[]){
   }
 }
 
-function updateData(){
+function updateData(stamp=0){
   if(skip)return;
+  var values = readHostsData();
+  if(values == null){
+    stopUpdate();
+    runUpdate();
+    return;
+  }
   updateHostsData(readHostsData());
   drawData();
 }
