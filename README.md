@@ -11,5 +11,5 @@ Vagrant setup to create Tomcats/httpd balancer playground
 
 4. Open and run jmeter-plan.yml in Apache JMeter
 
-You can control some JMX parameters on the fly using html/index.html
+You can monitor some JMX parameters on the fly using html/index.html (index.html is a sample of jolokia js library usage).
 
